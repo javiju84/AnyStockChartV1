@@ -1,0 +1,66 @@
+<!doctype html>
+<html>
+    <head>
+        <script src="../../js/anystock.min.js"></script>
+        
+        
+        <script src="http://cdn.anychart.com/csv-data/csco-daily.js"></script>
+        
+        
+        <title>OHLC Chart</title>
+        <style>
+         html, body, #container {
+             width: 100%;
+             height: 100%;
+             margin: 0;
+             padding: 0;
+         }
+        </style>
+    </head>
+    <body>
+        <div id="container"></div>
+        <script type="text/javascript">
+         anychart.onDocumentReady(function() {
+// The data that have been used for this sample can be taken from the CDN
+// http://cdn.anychart.com/csv-data/csco-daily.js
+
+// create data table on loaded data
+var dataTable = anychart.data.table();
+dataTable.addData(get_csco_daily_data());
+
+// map loaded data for the ohlc series
+var mapping = dataTable.mapAs({'open': 1, 'high':2, 'low': 3, 'close': 4});
+
+// map loaded data for the scroller
+var scrollerMapping = dataTable.mapAs();
+scrollerMapping.addField('value', 5);
+
+// create stock chart
+chart = anychart.stock();
+
+// create first plot on the chart
+var plot = chart.plot(0);
+plot.grid().enabled(true);
+plot.grid(1).enabled(true).layout('vertical');
+plot.minorGrid().enabled(true);
+plot.minorGrid(1).enabled(true).layout('vertical');
+
+// create EMA indicators with period 50
+plot.ema(dataTable.mapAs({'value': 4})).series().stroke('1.5 #455a64');
+
+var series = plot.ohlc(mapping).name('CSCO');
+series.legendItem().iconType('risingfalling');
+
+// create scroller series with mapped data
+chart.scroller().ohlc(mapping);
+
+// set container id for the chart
+chart.container('container');
+
+// initiate chart drawing
+chart.draw();
+    });
+    
+        </script>
+    </body>
+</html>

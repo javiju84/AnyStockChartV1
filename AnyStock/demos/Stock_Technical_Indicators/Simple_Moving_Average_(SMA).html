@@ -1,0 +1,75 @@
+<!doctype html>
+<html>
+    <head>
+        <script src="../../js/anystock.min.js"></script>
+        
+        
+        <script src="http://cdn.anychart.com/csv-data/csco-daily.js"></script>
+        
+        
+        <link rel="stylesheet" href="../../css/anychart-ui.min.css" />
+        
+        <title>Simple Moving Average (SMA)</title>
+        <style>
+         html, body, #container {
+             width: 100%;
+             height: 100%;
+             margin: 0;
+             padding: 0;
+         }
+        </style>
+    </head>
+    <body>
+        <div id="container"></div>
+        <script type="text/javascript">
+         anychart.onDocumentReady(function() {
+// The data used in this sample can be obtained from the CDN
+// http://cdn.anychart.com/csv-data/csco-daily.js
+
+// create data table on loaded data
+var dataTable = anychart.data.table();
+dataTable.addData(get_csco_daily_data());
+
+// map loaded data
+var mapping = dataTable.mapAs({'value': 4});
+
+// create stock chart
+chart = anychart.stock();
+
+// create plot on the chart
+var plot = chart.plot(0);
+
+// create line series
+var lineSeries = plot.line(mapping);
+lineSeries.name('CSCO');
+lineSeries.stroke('2px #64b5f6');
+
+// create SMA indicators with period 20
+var sma20 = plot.sma(mapping, 20).series();
+sma20.name('SMA(20)');
+sma20.stroke('#bf360c');
+
+// create SMA indicators with period 20
+var sma50 = plot.sma(mapping, 50).series();
+sma50.name('SMA(50)');
+sma50.stroke('#ff6d00');
+
+// adding extra Y axis to the right side
+var yAxis = plot.yAxis(1);
+yAxis.orientation('right');
+// setting chart padding to fit both Y axes
+chart.padding(10, 50, 10, 50);
+
+// create scroller series with mapped data
+chart.scroller().line(mapping);
+
+// set container id for the chart
+chart.container('container');
+
+// initiate chart drawing
+chart.draw();
+    });
+    
+        </script>
+    </body>
+</html>

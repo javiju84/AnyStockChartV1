@@ -1,0 +1,72 @@
+<!doctype html>
+<html>
+    <head>
+        <script src="../../js/anystock.min.js"></script>
+        
+        
+        <script src="http://cdn.anychart.com/csv-data/csco-daily.js"></script>
+        
+        
+        <link rel="stylesheet" href="../../css/anychart-ui.min.css" />
+        
+        <title>Exponential Moving Average (EMA)</title>
+        <style>
+         html, body, #container {
+             width: 100%;
+             height: 100%;
+             margin: 0;
+             padding: 0;
+         }
+        </style>
+    </head>
+    <body>
+        <div id="container"></div>
+        <script type="text/javascript">
+         anychart.onDocumentReady(function() {
+// The data used in this sample can be obtained from the CDN
+// http://cdn.anychart.com/csv-data/csco-daily.js
+
+// create data table on loaded data
+var dataTable = anychart.data.table();
+dataTable.addData(get_csco_daily_data());
+
+// map loaded data
+var mapping = dataTable.mapAs({'value': 4});
+
+// create stock chart
+chart = anychart.stock();
+
+// create plot on the chart
+var plot = chart.plot(0);
+
+// create line series
+var lineSeries = plot.line(mapping);
+lineSeries.name('CSCO');
+lineSeries.stroke('2px #64b5f6');
+
+// create EMA indicators with period 50
+var ema50 = plot.ema(mapping, 30).series();
+ema50.stroke('#ffa000');
+
+// adding extra Y axis to the right side
+var yAxis = plot.yAxis(1);
+yAxis.orientation('right');
+// setting chart padding to fit both Y axes
+chart.padding(10, 50, 10, 50);
+
+// create scroller series with mapped data
+chart.scroller().line(mapping);
+
+// set chart selected date/time range
+chart.selectRange('1990-03-26', '1995-01-03');
+
+// set container id for the chart
+chart.container('container');
+
+// initiate chart drawing
+chart.draw();
+    });
+    
+        </script>
+    </body>
+</html>

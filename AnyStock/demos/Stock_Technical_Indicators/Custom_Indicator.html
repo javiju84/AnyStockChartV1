@@ -1,0 +1,86 @@
+<!doctype html>
+<html>
+    <head>
+        <script src="../../js/anystock.min.js"></script>
+        
+        
+        <script src="http://cdn.anychart.com/csv-data/csco-daily.js"></script>
+        
+        
+        <link rel="stylesheet" href="../../css/anychart-ui.min.css" />
+        
+        <title>Custom Indicator</title>
+        <style>
+         html, body, #container {
+             width: 100%;
+             height: 100%;
+             margin: 0;
+             padding: 0;
+         }
+        </style>
+    </head>
+    <body>
+        <div id="container"></div>
+        <script type="text/javascript">
+         anychart.onDocumentReady(function() {
+// The data that have been used for this sample can be taken from the CDN
+// http://cdn.anychart.com/csv-data/csco-daily.js
+
+// create data table on loaded data
+var dataTable = anychart.data.table();
+dataTable.addData(get_csco_daily_data());
+
+// map loaded data
+var mapping = dataTable.mapAs({'value': 4});
+
+// create stock chart
+chart = anychart.stock();
+
+// create plot on the chart
+var plot = chart.plot(0);
+
+// create line series
+var lineSeries = plot.line(mapping);
+lineSeries.name('CSCO');
+lineSeries.stroke('2px #64b5f6');
+
+// create computer
+var computer = dataTable.createComputer(mapping);
+
+// set computer output field
+computer.addOutputField('myValue', 'myColumn');
+
+// set calculation function to produce values with random increment
+computer.setCalculationFunction(function(row) {
+    var value = row.get('value');
+    var myValue = value + Math.floor((Math.random() * 100) + 1);
+    row.set('myValue', myValue);
+});
+
+// map computed column 'myColumn' as value
+var computedMapping = dataTable.mapAs({'value': 'myColumn'});
+
+// create line series with mapping
+var computedLine = plot.line(computedMapping);
+computedLine.name('Custom Indicator');
+computedLine.stroke('#ffa000 0.6');
+
+// adding extra Y axis to the right side
+var yAxis = plot.yAxis(1);
+yAxis.orientation('right');
+// setting chart padding to fit both Y axes
+chart.padding(10, 50, 10, 50);
+
+// create scroller series with mapped data
+chart.scroller().line(mapping);
+
+// set container id for the chart
+chart.container('container');
+
+// initiate chart drawing
+chart.draw();
+    });
+    
+        </script>
+    </body>
+</html>
